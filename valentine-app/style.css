@@ -1,0 +1,350 @@
+:root {
+    --primary-color: #ff4d6d;
+    --secondary-color: #ff8fa3;
+    --bg-color: #fff0f3;
+    --paper-color: #fff;
+    --text-color: #590d22;
+    --overlay-bg: #2b2b2b;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-color);
+}
+
+/* Overlay & Envelope */
+/* Overlay & Envelope */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay-bg);
+    /* Display properties handled by Bootstrap classes in HTML */
+    z-index: 1000;
+    transition: opacity 1s ease-out;
+    cursor: pointer;
+}
+
+.envelope-wrapper {
+    position: relative;
+    animation: bounce 2s infinite;
+    cursor: pointer;
+}
+
+.envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background-color: #f08080;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.lid {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.lid.one {
+    border-width: 100px 150px 0 150px;
+    border-color: #f08080 transparent transparent transparent;
+    top: 0;
+    left: 0;
+    transform-origin: top;
+    transition: transform 0.5s ease-in-out 0.5s, z-index 0.2s 0.5s;
+    z-index: 3;
+}
+
+.lid.two {
+    border-width: 100px 150px 0 150px;
+    border-color: #cd5c5c transparent transparent transparent;
+    top: 0;
+    left: 0;
+    transform-origin: top;
+    transition: transform 0.5s ease-in-out;
+    z-index: 1;
+    /* Inside */
+    display: none;
+    /* Only need one lid effectively or use it for inner color */
+}
+
+/* We only need one lid that opens. Let's simplify. */
+.lid.one {
+    border-width: 110px 150px 0 150px;
+    /* Make it slightly longer to cover */
+    border-color: var(--secondary-color) transparent transparent transparent;
+    /* Secondary color */
+}
+
+.pocket {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 150px 120px 150px;
+    border-color: transparent transparent var(--primary-color) transparent;
+    /* Primary color */
+    z-index: 2;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+/* Side flaps to make it look full */
+.envelope::before,
+.envelope::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    z-index: 1;
+}
+
+.envelope::before {
+    left: 0;
+    border-width: 100px 0 100px 150px;
+    border-color: transparent transparent transparent #ff758f;
+    border-bottom-left-radius: 6px;
+}
+
+.envelope::after {
+    right: 0;
+    border-width: 100px 150px 100px 0;
+    border-color: transparent #ff758f transparent transparent;
+    border-bottom-right-radius: 6px;
+}
+
+.heart-seal {
+    font-size: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    transition: opacity 0.3s;
+    margin-top: -20px;
+    /* Adjust visual center */
+}
+
+/* Open Animation Class */
+.envelope-wrapper.open .lid.one {
+    transform: rotateX(180deg);
+    z-index: 0;
+}
+
+.envelope-wrapper.open .heart-seal {
+    opacity: 0;
+}
+
+.envelope-wrapper.open .date-check {
+    /* For passcode verification animation */
+}
+
+/* Instruction Text */
+.instruction {
+    color: white;
+    margin-top: 40px;
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Hidden State */
+.hidden {
+    display: none !important;
+}
+
+/* Main Content */
+#content {
+    opacity: 0;
+    /* Delay for overlay fade out */
+    z-index: 10;
+}
+
+.fade-in-animation {
+    animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Override Bootstrap container z-index to stay above hearts if needed, 
+   but hearts are fixed so they are separate. */
+
+.letter-container {
+    perspective: 1000px;
+}
+
+.letter-paper {
+    background: var(--paper-color);
+    /* Width is handled by Bootstrap cols */
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.5rem;
+    line-height: 1.8;
+    color: var(--text-color);
+    background-image: linear-gradient(#f1f1f1 1px, transparent 1px);
+    background-size: 100% 1.8em;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(2deg);
+    /* Reduce tilt for better readability on scroll */
+    min-height: 300px;
+    /* Ensure visible paper even if empty */
+    max-height: 80vh;
+    /* Limit height to fit screen */
+    display: flex;
+    flex-direction: column;
+}
+
+.letter-scroll-area {
+    overflow-y: auto;
+    max-height: 60vh;
+    /* Adjust based on paper padding */
+    padding-right: 10px;
+    /* Space for scrollbar */
+    flex-grow: 1;
+}
+
+/* Custom Scrollbar for Webkit */
+.letter-scroll-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+.letter-scroll-area::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.letter-scroll-area::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+    opacity: 0.5;
+}
+
+/* Music Control - Custom styles on top of Bootstrap btn */
+#music-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    z-index: 100;
+    /* Ensure clickable */
+    position: relative;
+    /* Context */
+}
+
+/* Floating Hearts */
+#hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.heart {
+    position: absolute;
+    bottom: -50px;
+    color: var(--primary-color);
+    font-size: 24px;
+    animation: floatUp linear forwards;
+    opacity: 0;
+}
+
+.floating-image {
+    position: absolute;
+    bottom: -50px;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    animation: floatUp linear forwards;
+    opacity: 0;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(0.5) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-110vh) scale(1.2) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* YouTube Player (Hidden) */
+#youtube-player {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Heart Burst Animation */
+.burst-heart {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    pointer-events: none;
+    z-index: 100;
+}
+
+@keyframes burstMove {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(1.5);
+        opacity: 0;
+    }
+}
